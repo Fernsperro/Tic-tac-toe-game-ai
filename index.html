@@ -1,16 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tic Tac Toe</title>
-  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2.5rem;
+      color: #444;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .cell:hover {
+      background-color: #e0f7fa;
+    }
+
+    .cell.taken {
+      pointer-events: none;
+      color: #666;
+    }
+
+    .status {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00796b;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+  </style>
 </head>
 <body>
-  <h1>Tic Tac Toe</h1>
-  <div id="board" class="board"></div>
-  <div id="message"></div>
-  <button id="restart">Restart Game</button>
-  <script src="script.js"></script>
+  <div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <div class="status" id="status"></div>
+    <button onclick="startGame()">Restart Game</button>
+    <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d265dc9f57.mp3"></audio>
+    <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_a7fbc9eb15.mp3"></audio>
+  </div>
+
+  <script>
+    let board = [];
+    let currentPlayer = "X";
+    let gameActive = true;
+
+    function createBoard() {
+      const boardContainer = document.getElementById("board");
+      boardContainer.innerHTML = "";
+      board = ["", "", "", "", "", "", "", "", ""];
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.setAttribute("data-index", i);
+        cell.addEventListener("click", handleCellClick);
+        boardContainer.appendChild(cell);
+      }
+    }
+
+    function handleCellClick(e) {
+      const index = e.target.getAttribute("data-index");
+      if (board[index] !== "" || !gameActive) return;
+
+      playSound("clickSound");
+      board[index] = currentPlayer;
+      e.target.textContent = currentPlayer;
+      e.target.classList.add("taken");
+
+      if (checkWinner(currentPlayer)) {
+        document.getElementById("status").textContent = `${currentPlayer} wins!`;
+        playSound("winSound");
+        gameActive = false;
+        return;
+      }
+
+      if (!board.includes("")) {
+        document.getElementById("status").textContent = "It's a draw!";
+        return;
+      }
+
+      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      document.getElementById("status").textContent = `${currentPlayer}'s turn`;
+    }
+
+    function checkWinner(player) {
+      const winCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      return winCombos.some(combo => {
+        return combo.every(i => board[i] === player);
+      });
+    }
+
+    function startGame() {
+      gameActive = true;
+      currentPlayer = "X";
+      document.getElementById("status").textContent = `${currentPlayer}'s turn`;
+      createBoard();
+    }
+
+    function playSound(id) {
+      document.getElementById(id).play();
+    }
+
+    // Start the game on page load
+    startGame();
+  </script>
 </body>
 </html>
