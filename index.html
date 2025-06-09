@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tic Tac Toe</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <h1>Tic Tac Toe</h1>
-    <div class="board" id="board"></div>
-    <div class="status" id="status"></div>
-    <button onclick="startGame()">Restart Game</button>
-    <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d265dc9f57.mp3"></audio>
-    <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_a7fbc9eb15.mp3"></audio>
+    <div id="board" class="board"></div>
+    <div id="message" class="message"></div>
+    <button id="restart" class="button">Restart Game</button>
   </div>
   <script src="script.js"></script>
 </body>
