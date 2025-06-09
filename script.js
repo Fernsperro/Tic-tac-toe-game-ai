@@ -99,16 +99,31 @@ function checkWinner(b) {
     [0,4,8], [2,4,6]
   ];
   for (const [a, b1, c] of winCombs) {
-    if (b[a] && b[a] === b[b1] && b[a] === b[c]) return b[a];
+    if (b[a] && b[a] === b[b1] && b[a] === b[c]) {
+      highlightWinningCells([a, b1, c]);
+      return b[a];
+    }
   }
   return null;
 }
 
+function highlightWinningCells(indices) {
+  const cells = document.querySelectorAll(".cell");
+  indices.forEach(i => {
+    cells[i].style.backgroundColor = "#a5d6a7"; // light green
+    cells[i].style.transition = "background-color 0.5s";
+  });
+}
+
 restartBtn.addEventListener("click", () => {
-  board = Array(9).fill(null);
-  currentPlayer = human;
-  message.textContent = "";
-  drawBoard();
+  boardEl.style.opacity = 0;
+  setTimeout(() => {
+    board = Array(9).fill(null);
+    currentPlayer = human;
+    message.textContent = "";
+    drawBoard();
+    boardEl.style.opacity = 1;
+  }, 300);
 });
 
 drawBoard();
